@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0a0a0f">
+<meta name="robots" content="noindex, nofollow">
+<title>Vault Admin · Ooredoo Staff Rewards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@10..48,400..800&family=Outfit:wght@300..700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --red: #ED1C24;
+    --red-bright: #FF2530;
+    --red-deep: #B8141B;
+    --bg: #0a0a0f;
+    --bg-elev: #15151f;
+    --bg-card: #1a1a26;
+    --border: rgba(255,255,255,0.06);
+    --border-strong: rgba(255,255,255,0.14);
+    --text: #f4f4f8;
+    --text-dim: #9a9aa8;
+    --text-faint: #5a5a68;
+    --gold: #FFD24A;
+    --common: #5DD68F;
+    --warn: #FFA94D;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { min-height: 100%; }
+  body {
+    font-family: 'Outfit', -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+  }
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(237,28,36,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(237,28,36,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    mask-image: radial-gradient(ellipse at 50% 30%, black 30%, transparent 80%);
+  }
+  .bg-glow {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(237,28,36,0.18), transparent 40%),
+      radial-gradient(circle at 90% 60%, rgba(237,28,36,0.10), transparent 50%);
+  }
+
+  /* ---------- Login screen ---------- */
+  .login-wrap {
+    position: relative; z-index: 1;
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 24px;
+  }
+  .login-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-strong);
+    border-radius: 18px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 30px 60px -20px rgba(0,0,0,0.6);
+  }
+  .login-eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px; letter-spacing: 0.32em; text-transform: uppercase;
+    color: var(--red-bright);
+    margin-bottom: 16px;
+  }
+  .login-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 32px; line-height: 1.1; font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .login-sub {
+    color: var(--text-dim); font-size: 14px;
+    margin-bottom: 28px;
+  }
+  .login-card form { display: flex; flex-direction: column; gap: 14px; }
+  .login-card label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-dim);
+  }
+  .login-card input[type="password"] {
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: 10px;
+    padding: 14px 16px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    width: 100%;
+    transition: border-color 0.15s;
+  }
+  .login-card input[type="password"]:focus {
+    outline: none; border-color: var(--red-bright);
+  }
+  .btn-primary {
+    background: var(--red);
+    border: none;
+    color: white;
+    padding: 14px 20px;
+    border-radius: 10px;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    letter-spacing: 0.04em;
+    transition: background 0.15s, transform 0.05s;
+  }
+  .btn-primary:hover { background: var(--red-bright); }
+  .btn-primary:active { transform: translateY(1px); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .login-error {
+    color: var(--red-bright);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    min-height: 18px;
+  }
+
+  /* ---------- Top bar ---------- */
+  .top-bar {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(18px);
+    background: rgba(10,10,15,0.78);
+    border-bottom: 1px solid var(--border);
+  }
+  .top-bar-inner {
+    max-width: 1400px; margin: 0 auto;
+    padding: 14px 24px;
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap;
+  }
+  .brand {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-weight: 700; font-size: 18px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .brand-tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-dim);
+    border-left: 1px solid var(--border-strong);
+    padding-left: 12px;
+  }
+  .top-actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .btn-ghost {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border-strong);
+    color: var(--text);
+    padding: 9px 14px;
+    border-radius: 8px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex; align-items: center; gap: 8px;
+    transition: background 0.15s, border-color 0.15s;
+  }
+  .btn-ghost:hover { background: rgba(255,255,255,0.08); border-color: var(--text-dim); }
+  .btn-ghost.danger:hover { border-color: var(--red-bright); color: var(--red-bright); }
+
+  /* ---------- Dashboard ---------- */
+  .dash {
+    position: relative; z-index: 1;
+    max-width: 1400px; margin: 0 auto;
+    padding: 32px 24px 64px;
+  }
+  .section-title {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 14px; font-weight: 700;
+    letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-dim);
+    margin: 32px 0 14px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .section-title::after {
+    content: ''; flex: 1; height: 1px; background: var(--border);
+  }
+
+  /* Stat cards */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 14px;
+    margin-top: 8px;
+  }
+  .stat-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px 22px;
+  }
+  .stat-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 10px;
+  }
+  .stat-value {
+    font-family: 'Bricolage Grotesque', sans-serif;
+    font-size: 36px; font-weight: 700; line-height: 1;
+  }
+  .stat-value.warn { color: var(--warn); }
+  .stat-value.good { color: var(--common); }
+  .stat-foot {
+    font-size: 12px; color: var(--text-faint); margin-top: 6px;
+  }
+
+  /* Tables */
+  .table-wrap {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .table-controls {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    display: flex; gap: 10px; align-items: center; flex-wrap: wrap;
+  }
+  .table-controls input[type="search"] {
+    flex: 1; min-width: 200px;
+    background: var(--bg-elev);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+  }
+  .table-controls input[type="search"]:focus {
+    outline: none; border-color: var(--red-bright);
+  }
+  .table-scroll { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 18px;
+    border-bottom: 1px solid var(--border);
+  }
+  th {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; letter-spacing: 0.16em; text-transform: uppercase;
+    color: var(--text-dim);
+    background: rgba(255,255,255,0.02);
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+  }
+  th:hover { color: var(--text); }
+  th .sort-ind { color: var(--text-faint); margin-left: 4px; }
+  th.sort-active { color: var(--red-bright); }
+  th.sort-active .sort-ind { color: var(--red-bright); }
+  tbody tr:hover { background: rgba(255,255,255,0.02); }
+  tbody tr:last-child td { border-bottom: none; }
+  td.mono { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--text-dim); }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  th.num { text-align: right; }
+  .stock-bar {
+    display: inline-block; width: 60px; height: 6px;
+    background: var(--bg-elev); border-radius: 3px; vertical-align: middle;
+    margin-left: 8px; overflow: hidden;
+  }
+  .stock-bar-fill { height: 100%; background: var(--common); transition: width 0.3s; }
+  .stock-bar-fill.low { background: var(--warn); }
+  .stock-bar-fill.gone { background: var(--red); }
+
+  .empty-state {
+    padding: 60px 24px;
+    text-align: center;
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+  }
+
+  .footer-meta {
+    margin-top: 24px;
+    text-align: right;
+    color: var(--text-faint);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  @media (max-width: 640px) {
+    .top-bar-inner { padding: 12px 16px; }
+    .dash { padding: 24px 16px 48px; }
+    .stat-value { font-size: 28px; }
+    th, td { padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="bg-glow"></div>
+
+<!-- ============================================================
+     LOGIN VIEW
+============================================================ -->
+<div id="view-login" class="login-wrap">
+  <div class="login-card">
+    <div class="login-eyebrow">Restricted access</div>
+    <h1 class="login-title">Vault Admin</h1>
+    <p class="login-sub">Enter the admin password to view claim records, stock, and download the audit CSV.</p>
+    <form id="login-form" autocomplete="off">
+      <label for="login-input">Admin password</label>
+      <input id="login-input" type="password" required autocomplete="current-password" placeholder="••••••••••••••••">
+      <button id="login-submit" class="btn-primary" type="submit">Unlock dashboard</button>
+      <div id="login-error" class="login-error" role="alert"></div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================================================
+     DASHBOARD VIEW
+============================================================ -->
+<div id="view-dash" style="display:none;">
+  <div class="top-bar">
+    <div class="top-bar-inner">
+      <div class="brand">
+        Ooredoo Vault
+        <span class="brand-tag">Admin · Live data</span>
+      </div>
+      <div class="top-actions">
+        <button id="btn-refresh" class="btn-ghost" type="button">↻ Refresh</button>
+        <a id="btn-csv" class="btn-ghost" href="#" download>⬇ Download CSV</a>
+        <button id="btn-logout" class="btn-ghost danger" type="button">Logout</button>
+      </div>
+    </div>
+  </div>
+
+  <main class="dash">
+    <div class="section-title">Summary</div>
+    <div id="stats" class="stats">
+      <!-- populated by JS -->
+    </div>
+
+    <div class="section-title">Stock by item</div>
+    <div class="table-wrap">
+      <div class="table-scroll">
+        <table id="stock-table">
+          <thead>
+            <tr>
+              <th data-sort="name">Item <span class="sort-ind">↕</span></th>
+              <th data-sort="initial" class="num">Initial <span class="sort-ind">↕</span></th>
+              <th data-sort="claimed" class="num">Claimed <span class="sort-ind">↕</span></th>
+              <th data-sort="remaining" class="num">Remaining <span class="sort-ind">↕</span></th>
+              <th data-sort="pct" class="num sort-active">% Claimed <span class="sort-ind">↓</span></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="section-title">Claims</div>
+    <div class="table-wrap">
+      <div class="table-controls">
+        <input id="claims-search" type="search" placeholder="Search staff ID or item name…" autocomplete="off">
+        <span id="claims-count" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-dim);"></span>
+      </div>
+      <div class="table-scroll">
+        <table id="claims-table">
+          <thead>
+            <tr>
+              <th data-sort="staffId">Staff ID <span class="sort-ind">↕</span></th>
+              <th data-sort="itemName">Item <span class="sort-ind">↕</span></th>
+              <th data-sort="ts" class="sort-active">Claimed at <span class="sort-ind">↓</span></th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="footer-meta" class="footer-meta"></div>
+  </main>
+</div>
+
+<script>
+// ============================================================
+// Item names — mirror of lib/items-data.json (must stay in sync).
+// Used to display human-readable names in the stock table even
+// when there are zero claims for an item (which means /api/state
+// doesn't return a name for it).
+// ============================================================
+const ITEM_NAMES = {
+  item_00: "JBL - Tune Wireless Headset",
+  item_01: "D-Link Wifi Extender",
+  item_02: "GREENNET - 8 Port Gigabit Switch",
+  item_03: "Huawei LUA-L22",
+  item_04: "Huawei Nova 2i",
+  item_05: "Huawei Y3 Grey",
+  item_06: "iPhone 14 Pro Max",
+  item_07: "iPhone X Silver 64GB",
+  item_08: "Samsung A8 Plus",
+  item_09: "Samsung Gear VR",
+  item_10: "Samsung Note 8",
+  item_11: "Samsung S10",
+  item_12: "Samsung SM-R500",
+  item_13: "SONY - Pulse 3D Headset",
+  item_14: "APPLE - AirTag Loop Blue",
+  item_15: "Wireless Charger",
+  item_16: "SAMSUNG - S5 Charger Kit",
+  item_17: "ASUS - Zenfone Go",
+  item_18: "SAMSUNG – S5 Cover",
+  item_19: "ASUS - Zenfone C",
+  item_20: "Samsung Smart Tag",
+  item_21: "Huawei Y3 2017 / CRO-L22",
+  item_22: "APPLE - AirTag Loop Orange",
+  item_23: "Huawei Selfie stick",
+  item_24: "NETGEAR - 8 Port Switch",
+};
+
+const TOKEN_KEY = 'ooredoo_admin_token';
+const $ = sel => document.querySelector(sel);
+
+// ============================================================
+// View switching
+// ============================================================
+function showDash() {
+  $('#view-login').style.display = 'none';
+  $('#view-dash').style.display = 'block';
+  loadState();
+}
+function showLogin() {
+  $('#view-dash').style.display = 'none';
+  $('#view-login').style.display = 'flex';
+  $('#login-input').value = '';
+  $('#login-error').textContent = '';
+  setTimeout(() => $('#login-input').focus(), 50);
+}
+
+// ============================================================
+// Auth
+// ============================================================
+async function verifyToken(token) {
+  const r = await fetch('/api/admin-verify', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + token }
+  });
+  if (r.status === 200) return { ok: true };
+  if (r.status === 503) return { ok: false, error: 'Admin is disabled on the server (ADMIN_TOKEN env var not set).' };
+  if (r.status === 401) return { ok: false, error: 'Invalid password.' };
+  return { ok: false, error: 'Unexpected error: ' + r.status };
+}
+
+$('#login-form').addEventListener('submit', async e => {
+  e.preventDefault();
+  const btn = $('#login-submit');
+  const err = $('#login-error');
+  const token = $('#login-input').value.trim();
+  err.textContent = '';
+  if (!token) return;
+  btn.disabled = true; btn.textContent = 'Checking…';
+  const res = await verifyToken(token);
+  btn.disabled = false; btn.textContent = 'Unlock dashboard';
+  if (res.ok) {
+    sessionStorage.setItem(TOKEN_KEY, token);
+    showDash();
+  } else {
+    err.textContent = res.error;
+  }
+});
+
+$('#btn-logout').addEventListener('click', () => {
+  sessionStorage.removeItem(TOKEN_KEY);
+  showLogin();
+});
+
+// Resume session if a valid token is in sessionStorage
+(async () => {
+  const stored = sessionStorage.getItem(TOKEN_KEY);
+  if (!stored) { showLogin(); return; }
+  const res = await verifyToken(stored);
+  if (res.ok) showDash();
+  else { sessionStorage.removeItem(TOKEN_KEY); showLogin(); }
+})();
+
+// ============================================================
+// Data fetch + render
+// ============================================================
+let currentState = null;
+let stockSort = { col: 'pct', dir: 'desc' };
+let claimsSort = { col: 'ts', dir: 'desc' };
+
+async function loadState() {
+  $('#btn-refresh').disabled = true;
+  $('#btn-refresh').textContent = '↻ Loading…';
+  try {
+    const r = await fetch('/api/state', { cache: 'no-store' });
+    if (!r.ok) throw new Error('Failed to fetch state: ' + r.status);
+    currentState = await r.json();
+    render();
+  } catch (e) {
+    console.error(e);
+    alert('Error loading data: ' + e.message);
+  } finally {
+    $('#btn-refresh').disabled = false;
+    $('#btn-refresh').textContent = '↻ Refresh';
+  }
+}
+
+$('#btn-refresh').addEventListener('click', loadState);
+
+function buildStockRows(items, claims) {
+  // Count claims per item
+  const claimCount = {};
+  for (const c of Object.values(claims)) {
+    claimCount[c.itemId] = (claimCount[c.itemId] || 0) + 1;
+  }
+  // Union of item ids from inventory + claims + ITEM_NAMES
+  const allIds = new Set([
+    ...Object.keys(items),
+    ...Object.keys(claimCount),
+    ...Object.keys(ITEM_NAMES),
+  ]);
+  const rows = [];
+  for (const id of allIds) {
+    const remaining = Number(items[id] ?? 0);
+    const claimed = claimCount[id] || 0;
+    const initial = remaining + claimed;
+    const pct = initial > 0 ? Math.round((claimed / initial) * 100) : 0;
+    rows.push({
+      id,
+      name: ITEM_NAMES[id] || id,
+      initial,
+      claimed,
+      remaining,
+      pct,
+    });
+  }
+  return rows;
+}
+
+function sortRows(rows, sort) {
+  const { col, dir } = sort;
+  const mul = dir === 'asc' ? 1 : -1;
+  return rows.slice().sort((a, b) => {
+    const av = a[col], bv = b[col];
+    if (typeof av === 'number' && typeof bv === 'number') return (av - bv) * mul;
+    return String(av).localeCompare(String(bv)) * mul;
+  });
+}
+
+function renderStats(stockRows, claims) {
+  const totalClaims = Object.keys(claims).length;
+  const totalInitial = stockRows.reduce((s, r) => s + r.initial, 0);
+  const totalClaimed = stockRows.reduce((s, r) => s + r.claimed, 0);
+  const soldOut = stockRows.filter(r => r.initial > 0 && r.remaining === 0).length;
+  const pct = totalInitial > 0 ? Math.round((totalClaimed / totalInitial) * 100) : 0;
+
+  $('#stats').innerHTML = `
+    <div class="stat-card">
+      <div class="stat-label">Total claims</div>
+      <div class="stat-value">${totalClaims}</div>
+      <div class="stat-foot">unique staff who claimed</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Stock claimed</div>
+      <div class="stat-value ${pct >= 80 ? 'warn' : 'good'}">${pct}%</div>
+      <div class="stat-foot">${totalClaimed} of ${totalInitial} units</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Items sold out</div>
+      <div class="stat-value ${soldOut > 0 ? 'warn' : ''}">${soldOut}</div>
+      <div class="stat-foot">of ${stockRows.length} items</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Stock remaining</div>
+      <div class="stat-value">${totalInitial - totalClaimed}</div>
+      <div class="stat-foot">units still claimable</div>
+    </div>
+  `;
+}
+
+function renderStockTable(rows) {
+  const sorted = sortRows(rows, stockSort);
+  const tbody = $('#stock-table tbody');
+  if (sorted.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="5" class="empty-state">No items found.</td></tr>';
+    return;
+  }
+  tbody.innerHTML = sorted.map(r => {
+    const barClass = r.remaining === 0 ? 'gone' : (r.pct >= 70 ? 'low' : '');
+    return `
+      <tr>
+        <td>${escapeHtml(r.name)}<div style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text-faint);margin-top:2px;">${escapeHtml(r.id)}</div></td>
+        <td class="num mono">${r.initial}</td>
+        <td class="num mono">${r.claimed}</td>
+        <td class="num mono">${r.remaining}</td>
+        <td class="num mono">
+          ${r.pct}%
+          <span class="stock-bar"><span class="stock-bar-fill ${barClass}" style="width:${r.pct}%"></span></span>
+        </td>
+      </tr>
+    `;
+  }).join('');
+  updateSortIndicators('#stock-table', stockSort);
+}
+
+function renderClaimsTable() {
+  const claims = currentState?.claims || {};
+  const search = $('#claims-search').value.trim().toLowerCase();
+  let rows = Object.entries(claims).map(([staffId, c]) => ({
+    staffId,
+    itemId: c.itemId,
+    itemName: c.itemName || ITEM_NAMES[c.itemId] || c.itemId,
+    ts: c.ts,
+  }));
+  if (search) {
+    rows = rows.filter(r =>
+      r.staffId.toLowerCase().includes(search) ||
+      r.itemName.toLowerCase().includes(search)
+    );
+  }
+  rows = sortRows(rows, claimsSort);
+
+  $('#claims-count').textContent = rows.length === Object.keys(claims).length
+    ? `${rows.length} claims`
+    : `${rows.length} of ${Object.keys(claims).length} claims`;
+
+  const tbody = $('#claims-table tbody');
+  if (rows.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="3" class="empty-state">${search ? 'No claims match your search.' : 'No claims yet.'}</td></tr>`;
+    updateSortIndicators('#claims-table', claimsSort);
+    return;
+  }
+  tbody.innerHTML = rows.map(r => `
+    <tr>
+      <td class="mono" style="color:var(--text);">${escapeHtml(r.staffId)}</td>
+      <td>${escapeHtml(r.itemName)}</td>
+      <td class="mono">${formatTimestamp(r.ts)}</td>
+    </tr>
+  `).join('');
+  updateSortIndicators('#claims-table', claimsSort);
+}
+
+function render() {
+  if (!currentState) return;
+  const stockRows = buildStockRows(currentState.items || {}, currentState.claims || {});
+  renderStats(stockRows, currentState.claims || {});
+  renderStockTable(stockRows);
+  renderClaimsTable();
+  // CSV link with current token
+  const token = sessionStorage.getItem(TOKEN_KEY) || '';
+  $('#btn-csv').href = '/api/audit?token=' + encodeURIComponent(token);
+  // Footer
+  $('#footer-meta').textContent = `Snapshot · ${new Date().toLocaleString()}`;
+}
+
+// ============================================================
+// Sort handling
+// ============================================================
+function setupSortHandlers(tableSel, sortState, onChange) {
+  document.querySelectorAll(`${tableSel} thead th[data-sort]`).forEach(th => {
+    th.addEventListener('click', () => {
+      const col = th.dataset.sort;
+      if (sortState.col === col) {
+        sortState.dir = sortState.dir === 'asc' ? 'desc' : 'asc';
+      } else {
+        sortState.col = col;
+        // numeric columns default to desc, text columns to asc
+        const numeric = th.classList.contains('num');
+        sortState.dir = numeric ? 'desc' : 'asc';
+      }
+      onChange();
+    });
+  });
+}
+function updateSortIndicators(tableSel, sortState) {
+  document.querySelectorAll(`${tableSel} thead th[data-sort]`).forEach(th => {
+    const ind = th.querySelector('.sort-ind');
+    if (th.dataset.sort === sortState.col) {
+      th.classList.add('sort-active');
+      ind.textContent = sortState.dir === 'asc' ? '↑' : '↓';
+    } else {
+      th.classList.remove('sort-active');
+      ind.textContent = '↕';
+    }
+  });
+}
+setupSortHandlers('#stock-table', stockSort, () => renderStockTable(buildStockRows(currentState.items || {}, currentState.claims || {})));
+setupSortHandlers('#claims-table', claimsSort, renderClaimsTable);
+
+$('#claims-search').addEventListener('input', renderClaimsTable);
+
+// ============================================================
+// Helpers
+// ============================================================
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[c]));
+}
+function formatTimestamp(ts) {
+  if (!ts) return '—';
+  const d = new Date(Number(ts));
+  if (isNaN(d.getTime())) return '—';
+  const pad = n => String(n).padStart(2, '0');
+  return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+}
+</script>
+</body>
+</html>
