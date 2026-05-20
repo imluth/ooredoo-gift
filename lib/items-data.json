@@ -1,0 +1,127 @@
+[
+  {
+    "id": "item_00",
+    "name": "JBL - Tune Wireless Headset",
+    "qty": 1
+  },
+  {
+    "id": "item_01",
+    "name": "D-Link Wifi Extender",
+    "qty": 1
+  },
+  {
+    "id": "item_02",
+    "name": "GREENNET - 8 Port Gigabit Switch",
+    "qty": 1
+  },
+  {
+    "id": "item_03",
+    "name": "Huawei LUA-L22",
+    "qty": 1
+  },
+  {
+    "id": "item_04",
+    "name": "Huawei Nova 2i",
+    "qty": 1
+  },
+  {
+    "id": "item_05",
+    "name": "Huawei Y3 Grey",
+    "qty": 1
+  },
+  {
+    "id": "item_06",
+    "name": "iPhone 14 Pro Max",
+    "qty": 1
+  },
+  {
+    "id": "item_07",
+    "name": "iPhone X Silver 64GB",
+    "qty": 1
+  },
+  {
+    "id": "item_08",
+    "name": "Samsung A8 Plus",
+    "qty": 1
+  },
+  {
+    "id": "item_09",
+    "name": "Samsung Gear VR",
+    "qty": 1
+  },
+  {
+    "id": "item_10",
+    "name": "Samsung Note 8",
+    "qty": 1
+  },
+  {
+    "id": "item_11",
+    "name": "Samsung S10",
+    "qty": 1
+  },
+  {
+    "id": "item_12",
+    "name": "Samsung SM-R500",
+    "qty": 1
+  },
+  {
+    "id": "item_13",
+    "name": "SONY - Pulse 3D Headset",
+    "qty": 1
+  },
+  {
+    "id": "item_14",
+    "name": "APPLE - AirTag Loop Blue",
+    "qty": 2
+  },
+  {
+    "id": "item_15",
+    "name": "Wireless Charger",
+    "qty": 3
+  },
+  {
+    "id": "item_16",
+    "name": "SAMSUNG - S5 Charger Kit",
+    "qty": 4
+  },
+  {
+    "id": "item_17",
+    "name": "ASUS - Zenfone Go",
+    "qty": 4
+  },
+  {
+    "id": "item_18",
+    "name": "SAMSUNG \u2013 S5 Cover",
+    "qty": 5
+  },
+  {
+    "id": "item_19",
+    "name": "ASUS - Zenfone C",
+    "qty": 5
+  },
+  {
+    "id": "item_20",
+    "name": "Samsung Smart Tag",
+    "qty": 5
+  },
+  {
+    "id": "item_21",
+    "name": "Huawei Y3 2017 / CRO-L22",
+    "qty": 6
+  },
+  {
+    "id": "item_22",
+    "name": "APPLE - AirTag Loop Orange",
+    "qty": 10
+  },
+  {
+    "id": "item_23",
+    "name": "Huawei Selfie stick",
+    "qty": 23
+  },
+  {
+    "id": "item_24",
+    "name": "NETGEAR - 8 Port Switch",
+    "qty": 65
+  }
+]
